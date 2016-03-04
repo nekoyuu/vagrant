@@ -14,6 +14,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network 'private_network', ip: settings['ip'] ||= '192.168.33.10'
   config.vm.synced_folder '.', '/vagrant'
 
+  if settings.has_key?('network')
+    config.vm.network 'public_network', ip: settings['network']['ip'], bridge: settings['network']['bridge'] ||= nil
+  end
+
   config.vm.provider 'virtualbox' do |vb|
     vb.name = settings['hostname'] ||= 'develop'
     vb.memory = settings['memory'] ||= '2048'
