@@ -199,7 +199,7 @@ fi
 # nvm, Node.js, npm のインストール
 if ! [ -e /usr/local/src/nvm ]; then
   # 依存パッケージのインストール
-  yum -y --nogpgcheck install openssl-devel gcc-c++
+  yum -y --nogpgcheck install gcc-c++ openssl-devel libpng-devel
 
   #nvm のインストール
   echo "Installing nvm..."
