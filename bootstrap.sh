@@ -199,6 +199,7 @@ fi
 # nvm, Node.js, npm のインストール
 if ! [ -e /usr/local/src/nvm ]; then
   # 依存パッケージのインストール
+  # libpng-devel は npm の imagemin-pngquant をコンパイルするのに必要っぽい
   yum -y --nogpgcheck install gcc-c++ openssl-devel libpng-devel
 
   #nvm のインストール
