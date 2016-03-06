@@ -23,6 +23,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.memory = settings['memory'] ||= '2048'
   end
 
+  config.ssh.forward_agent = true
+
   config.vm.provision 'file', source: './resources/main.cf', destination: 'main.cf'
   config.vm.provision 'file', source: './resources/httpd.conf', destination: 'httpd.conf'
   config.vm.provision 'file', source: './resources/php.ini', destination: 'php.ini'
