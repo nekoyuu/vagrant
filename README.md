@@ -43,15 +43,23 @@ $ git checkout develop
 $ git flow feature start {task_name}
 
 # composer で管理しているものがあれば実行
+# カレントディレクトリの composer.json が実行される
 $ composer install
 
 # npm で管理しているものがあれば実行
+# カレントディレクトリの package.json が実行される
 $ npm install
 
 # bower で管理しているものがあれば実行
+# カレントディレクトリの bower.json が実行される
 $ bower install
 
+# bourbon を利用しているのであれば実行
+# カレントディレクトリ配下に mixin が格納された bourbon/ が生成される
+$ bourbon install
+
 # gulp を利用しているのであれば実行
+# カレントディレクトリの gulpfile.js が実行される
 $ gulp
 ```
 
@@ -82,6 +90,7 @@ Vagrantfile に ```config.ssh.forward_agent = true``` を追加（記述済）
 * Composer
 * Sass
 * Compass
+* Bourbon
 * Modular Scale
 * Susy
 * Bower

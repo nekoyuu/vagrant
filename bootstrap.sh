@@ -233,6 +233,13 @@ if ! [ $? = 0 ]; then
   gem install compass
 fi
 
+# Bourbon のインストール
+which bourbon > /dev/null 2>&1
+if ! [ $? = 0 ]; then
+  echo "Installing Bourbon..."
+  gem install bourbon
+fi
+
 # Modular Scale のインストール
 if ! locate modular-scale; then
   echo "Installing Modular Scale..."
