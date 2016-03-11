@@ -89,6 +89,10 @@ fi
 echo "Changing a group name of PHP Session storage directory..."
 chown -R :vagrant /var/lib/php/session /var/lib/php/wsdlcache
 
+echo "Making the \"php_errors.log\" file..."
+touch /var/log/php_errors.log
+chown vagrant:vagrant /var/log/php_errors.log
+
 systemctl restart httpd
 
 # MySQL 5.6 のインストール
