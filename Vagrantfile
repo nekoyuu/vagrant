@@ -28,6 +28,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision 'file', source: './resources/main.cf', destination: 'main.cf'
   config.vm.provision 'file', source: './resources/httpd.conf', destination: 'httpd.conf'
   config.vm.provision 'file', source: './resources/php.ini', destination: 'php.ini'
+  config.vm.provision 'file', source: './resources/logrotate_php', destination: 'logrotate_php'
   config.vm.provision 'file', source: './resources/my.cnf', destination: 'my.cnf'
   config.vm.provision 'file', source: './resources/phpMyAdmin.conf', destination: 'phpMyAdmin.conf'
   config.vm.provision 'file', source: './resources/xdebug.ini', destination: 'xdebug.ini'

@@ -89,9 +89,16 @@ fi
 echo "Changing a group name of PHP Session storage directory..."
 chown -R :vagrant /var/lib/php/session /var/lib/php/wsdlcache
 
-echo "Making the \"php_errors.log\" file..."
-touch /var/log/php_errors.log
+if ! [ -e /var/log/php_errors.log ]; then
+  echo "Making the \"php_errors.log\" file..."
+  touch /var/log/php_errors.log
+fi
 chown vagrant:vagrant /var/log/php_errors.log
+
+if [ -e /home/vagrant/logrotate_php ]; then
+  echo "Copying rotate config file of php_errors.log..."
+  mv /home/vagrant/logrotate_php /etc/logrotate.d/php
+fi
 
 systemctl restart httpd
 
