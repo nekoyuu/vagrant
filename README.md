@@ -54,10 +54,6 @@ $ npm install
 # カレントディレクトリの bower.json が実行される
 $ bower install
 
-# bourbon を利用しているのであれば実行
-# カレントディレクトリ配下に mixin が格納された bourbon/ が生成される
-$ bourbon install
-
 # gulp を利用しているのであれば実行
 # カレントディレクトリの gulpfile.js が実行される
 $ gulp
@@ -73,6 +69,35 @@ $ gulp
 $ ssh-add -K ~/.ssh/id_rsa
 ```
 Vagrantfile に ```config.ssh.forward_agent = true``` を追加（記述済）
+
+## パッケージのインストール・アンインストール方法
+特別な理由がない限り、下記コマンドにて行う（直接 json ファイルを操作しない）。
+### Composer
+```shell
+$ composer [require|remove] phpunit/phpunit:3.7.*       # require を対象に追加/削除
+$ composer [require|remove] phpunit/phpunit:3.7.* --dev # require-dev を対象に追加/削除
+```
+
+### node.js (npm)
+```shell
+$ npm init # 初期設定（package.json を生成）
+$ npm [i|r] -S package # dependencies を対象に追加/削除
+$ npm [i|r] -D package # devDependencies を対象に追加/削除
+```
+
+### Bower
+```shell
+$ bower init # 初期設定（bower.json を生成）
+$ bower [i|r] -S package # dependencies を対象に追加/削除
+$ bower [i|r] -D package # devDependencies を対象に追加/削除
+```
+
+### Bourbon
+```shell
+# カレントディレクトリ配下に mixin が格納された bourbon/ が生成される
+$ bourbon install
+$ rm -rf bourbon # bourbon ディレクトリを削除
+```
 
 ## スペック
 バージョンの明記のないものは最新バージョン
