@@ -33,6 +33,11 @@ gulp-watch にコールバックハンドラを提供する。
 対象ファイルを検証して、カスタムされた Modernizr をビルドする。  
 [https://www.npmjs.com/package/gulp-modernizr](https://www.npmjs.com/package/gulp-modernizr)
 
+### gulp-newer
+流れてきた対象ファイルにひとつでも変更ファイルがあれば、全てのファイルを次のストリームへ流す。  
+gulp-sass や gulp-concat と併用してファイルを連結したりする場合は gulp-changed よりおすすめ。  
+[https://www.npmjs.com/package/gulp-newer](https://www.npmjs.com/package/gulp-newer)
+
 ### gulp-notify
 デスクトップ通知を出す。
 ※ Vagrant 環境で動かない場合があるので注意（README.md 参照）。  
@@ -47,7 +52,7 @@ Gulp 実行時のエラーによる停止を抑止する。
 [https://www.npmjs.com/package/gulp-rename](https://www.npmjs.com/package/gulp-rename)
 
 ### gulp-sourcemaps
-開発者ツールでコンパイル前のソースを表示する。
+開発者ツールでコンパイル前のソースを表示する。  
 [https://www.npmjs.com/package/gulp-sourcemaps](https://www.npmjs.com/package/gulp-sourcemaps)
 
 ### gulp-watch
@@ -62,6 +67,7 @@ Gulp 実行時のエラーによる停止を抑止する。
 ## Bower
 ### gulp-bower
 bower.json で指定されているパッケージをインストールする。  
+コンポーネントディレクトリがない場合はエラーになる（別途 ```$ bower install``` などが必要）。  
 [https://www.npmjs.com/package/gulp-bower](https://www.npmjs.com/package/gulp-bower)
 
 ### main-bower-files
@@ -74,7 +80,7 @@ bower.json で指定されているパッケージをインストールする。
 指定したブラウザとバージョンでベンダープレフィックスを付加する。  
 [https://www.npmjs.com/package/gulp-autoprefixer](https://www.npmjs.com/package/gulp-autoprefixer)
 
-### gulp-clean-css（旧: gulp-minify-css）
+### gulp-clean-css（gulp-minify-css が deprecated になったため）
 clean-css を使用してミニファイする。  
 [https://www.npmjs.com/package/gulp-clean-css](https://www.npmjs.com/package/gulp-clean-css)
 
@@ -85,6 +91,11 @@ Compass を使用してコンパイルする。
 ### gulp-csscomb
 CSS のコーディングスタイルをフォーマットに合わせて修正する。  
 [https://www.npmjs.com/package/gulp-csscomb](https://www.npmjs.com/package/gulp-csscomb)
+
+[ここ](http://csscomb.com/config)で設定ファイル（.csscomb.json）のテンプレートが生成できる。
+
+gulp-sourcemaps が未対応なので、同時に使用するとマッピングが崩れる（2016/03/18 現在）。  
+[https://github.com/csscomb/csscomb.js/issues/449#issue-130486319](https://github.com/csscomb/csscomb.js/issues/449#issue-130486319)
 
 ### gulp-sass
 Sass ファイルをコンパイルする。  
