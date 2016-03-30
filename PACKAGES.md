@@ -1,6 +1,10 @@
 # よく使うパッケージ/プラグイン
 
 ## ユーティリティ
+### asset-builder
+アセット結合を定義ファイルとして一元化する。  
+[https://www.npmjs.com/package/asset-builder](https://www.npmjs.com/package/asset-builder)
+
 ### del
 対象ファイル/ディレクトリを削除する。  
 [https://www.npmjs.com/package/del](https://www.npmjs.com/package/del)
@@ -29,6 +33,10 @@ gulp-watch にコールバックハンドラを提供する。
 対象ファイルをフィルタリングして次のストリームへ流す。  
 [https://www.npmjs.com/package/gulp-filter](https://www.npmjs.com/package/gulp-filter)
 
+### gulp-if
+条件付きタスクを実行する。  
+[https://www.npmjs.com/package/gulp-if](https://www.npmjs.com/package/gulp-if)
+
 ### gulp-modernizr
 対象ファイルを検証して、カスタムされた Modernizr をビルドする。  
 [https://www.npmjs.com/package/gulp-modernizr](https://www.npmjs.com/package/gulp-modernizr)
@@ -39,7 +47,7 @@ gulp-sass や gulp-concat と併用してファイルを連結したりする場
 [https://www.npmjs.com/package/gulp-newer](https://www.npmjs.com/package/gulp-newer)
 
 ### gulp-notify
-デスクトップ通知を出す。
+デスクトップ通知を出す。  
 ※ Vagrant 環境で動かない場合があるので注意（README.md 参照）。  
 [https://www.npmjs.com/package/gulp-notify](https://www.npmjs.com/package/gulp-notify)
 
@@ -58,6 +66,10 @@ Gulp 実行時のエラーによる停止を抑止する。
 ### gulp-watch
 対象ファイルの変更を監視する。gulp.watch の強化版みたいなもの。  
 [https://www.npmjs.com/package/gulp-watch](https://www.npmjs.com/package/gulp-watch)
+
+### merge-stream
+タスク内の複数のストリームをマージする。  
+[https://www.npmjs.com/package/merge-stream](https://www.npmjs.com/package/merge-stream)
 
 ### run-sequence
 通常は並列実行されるタスクの実行順序を指定する。  
@@ -104,6 +116,10 @@ Sass ファイルをコンパイルする。
 ### node-bourbon
 gulp-sass で Bourbon ライブラリを使用する。  
 [https://www.npmjs.com/package/node-bourbon](https://www.npmjs.com/package/node-bourbon)
+
+### sass-convert
+CSS, SCSS, SASS を SCSS, SASS に変換する。  
+[https://www.npmjs.com/package/sass-convert](https://www.npmjs.com/package/sass-convert)
 
 
 ## Javascript
