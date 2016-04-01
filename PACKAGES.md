@@ -25,6 +25,10 @@ gulp-watch にコールバックハンドラを提供する。
 対象ファイルを連結する。  
 [https://www.npmjs.com/package/gulp-concat](https://www.npmjs.com/package/gulp-concat)
 
+### gulp-convert-encoding
+対象ファイルのエンコーディングを変換する。  
+[https://www.npmjs.com/package/gulp-convert-encoding](https://www.npmjs.com/package/gulp-convert-encoding)
+
 ### gulp-debug
 ストリームに流れているファイル名を出力する。  
 [https://www.npmjs.com/package/gulp-debug](https://www.npmjs.com/package/gulp-debug)
@@ -66,6 +70,10 @@ Gulp 実行時のエラーによる停止を抑止する。
 ### gulp-watch
 対象ファイルの変更を監視する。gulp.watch の強化版みたいなもの。  
 [https://www.npmjs.com/package/gulp-watch](https://www.npmjs.com/package/gulp-watch)
+
+### lazypipe
+複数のタスクをグループ化（クロージャ化）する。  
+[https://www.npmjs.com/package/lazypipe](https://www.npmjs.com/package/lazypipe)
 
 ### merge-stream
 タスク内の複数のストリームをマージする。  
