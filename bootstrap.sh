@@ -176,7 +176,7 @@ yum -y --nogpgcheck --enablerepo=epel install git gitflow
 RUBY_VERSION=$4
 if ! [ -e /usr/local/src/rbenv ]; then
   # 依存パッケージのインストール
-  yum -y --nogpgcheck install openssl-devel readline-devel zlib-devel
+  yum -y --nogpgcheck install gcc make openssl-devel readline-devel zlib-devel
 
   # rbenv のインストール
   echo "Installing rbenv..."
