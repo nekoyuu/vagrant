@@ -16,7 +16,7 @@ updatedb
 # リポジトリを追加
 if ! locate epel; then
   echo "Adding the epel repository..."
-  rpm -Uvh http://ftp.iij.ad.jp/pub/linux/fedora/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+  rpm -Uvh http://ftp.iij.ad.jp/pub/linux/fedora/epel/7/x86_64/e/epel-release-7-7.noarch.rpm
 fi
 
 if ! locate remi; then
