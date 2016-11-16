@@ -74,6 +74,7 @@ Vagrantfile に ```config.ssh.forward_agent = true``` を追加（記述済）
 特別な理由がない限り、下記コマンドにて行う（直接 json ファイルを操作しない）。
 ### Composer
 ```shell
+$ composer init # 初期設定（composer.json を生成）
 $ composer [require|remove] phpunit/phpunit:3.7.*       # require を対象に追加/削除
 $ composer [require|remove] phpunit/phpunit:3.7.* --dev # require-dev を対象に追加/削除
 ```
