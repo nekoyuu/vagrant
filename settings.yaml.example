@@ -1,6 +1,6 @@
 ---
-hostname: vagrant-test
-box: bento/centos-7.3
+hostname: vagrant
+box: bento/centos-7.4
 ip: 10.0.0.10
 #network:
 #  ip: 192.168.0.100
@@ -11,4 +11,4 @@ db_name: develop
 db_username: develop
 db_password: develop
 
-ruby_version: 2.4.1
+ruby_version: 2.4.2
