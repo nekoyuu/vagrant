@@ -315,7 +315,7 @@ unknown_local_recipient_reject_code = 550
 #relayhost = [mailserver.isp.tld]
 #relayhost = uucphost
 #relayhost = [an.ip.add.ress]
-relayhost = [shape-design.info]
+relayhost = [server.shape-design.info]
 
 # REJECTING UNKNOWN RELAY USERS
 #
