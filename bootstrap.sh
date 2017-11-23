@@ -29,15 +29,21 @@ if ! locate mysql56-community; then
   rpm -Uvh http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
 fi
 
-# Postfix のインストール
+# Postfix + SASL のインストール
 # Note: MySQL と依存関係があるため、パッケージを指定しておかないと MySQL のインストールでこける
 #       Dependencies: mysql-community-common, mysql-community-libs
-echo "Installing Postfix..."
-yum -y --nogpgcheck --disablerepo=mysql57-community --enablerepo=epel,mysql56-community install postfix
+echo "Installing Postfix + SASL..."
+yum -y --nogpgcheck --disablerepo=mysql57-community --enablerepo=epel,mysql56-community install postfix cyrus-sasl*
 
 if [ -e /home/vagrant/main.cf ]; then
   echo "Copying Postfix config file..."
   mv /home/vagrant/main.cf /etc/postfix/main.cf
+  chown root:root /etc/postfix/main.cf
+
+  echo "Copying sasl relay password file..."
+  mv /home/vagrant/relay_password /etc/postfix/relay_password
+  chown root:root /etc/postfix/relay_password
+  postmap hash:/etc/postfix/relay_password
 fi
 
 systemctl enable postfix

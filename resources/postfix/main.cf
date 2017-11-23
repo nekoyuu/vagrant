@@ -678,3 +678,13 @@ sample_directory = /usr/share/doc/postfix-2.10.1/samples
 # readme_directory: The location of the Postfix README files.
 #
 readme_directory = /usr/share/doc/postfix-2.10.1/README_FILES
+
+
+myhostname = shape-design.info
+mydomain = shape-design.info
+relayhost = [mail.shape-design.info]:587
+smtp_sasl_auth_enable = yes
+smtp_sasl_security_options = noanonymous
+smtp_sasl_password_maps = hash:/etc/postfix/relay_password
+smtp_sasl_mechanism_filter = plain
+smtp_tls_security_level = may

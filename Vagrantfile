@@ -27,13 +27,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.ssh.forward_agent = true
 
-  config.vm.provision 'file', source: './resources/main.cf', destination: 'main.cf'
-  config.vm.provision 'file', source: './resources/httpd.conf', destination: 'httpd.conf'
-  config.vm.provision 'file', source: './resources/php.ini', destination: 'php.ini'
-  config.vm.provision 'file', source: './resources/logrotate_php', destination: 'logrotate_php'
-  config.vm.provision 'file', source: './resources/my.cnf', destination: 'my.cnf'
-  config.vm.provision 'file', source: './resources/phpMyAdmin.conf', destination: 'phpMyAdmin.conf'
-  config.vm.provision 'file', source: './resources/xdebug.ini', destination: 'xdebug.ini'
+  config.vm.provision 'file', source: './resources/postfix/main.cf', destination: 'main.cf'
+  config.vm.provision 'file', source: './resources/postfix/relay_password', destination: 'relay_password'
+  config.vm.provision 'file', source: './resources/apache/httpd.conf', destination: 'httpd.conf'
+  config.vm.provision 'file', source: './resources/php/php.ini', destination: 'php.ini'
+  config.vm.provision 'file', source: './resources/php/logrotate_php', destination: 'logrotate_php'
+  config.vm.provision 'file', source: './resources/mysql/my.cnf', destination: 'my.cnf'
+  config.vm.provision 'file', source: './resources/phpmyadmin/phpMyAdmin.conf', destination: 'phpMyAdmin.conf'
+  config.vm.provision 'file', source: './resources/php/xdebug.ini', destination: 'xdebug.ini'
 
   config.vm.provision 'shell' do |s|
     s.path = './bootstrap.sh'
