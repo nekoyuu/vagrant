@@ -103,7 +103,7 @@ $ rm -rf bourbon # bourbon ディレクトリを削除
 ## スペック
 バージョンの明記のないものは最新バージョン
 
-* Postfix
+* Postfix + SASL
 * Apache
 * PHP: 5.6
 * MySQL: 5.6
