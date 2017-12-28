@@ -1,10 +1,76 @@
 # ローカル環境構築手順
 
-## vagrant-vbguest プラグインをインストール
+## Vagrant プラグインをインストール
+### vagrant-vbguest
+VirtualBox の Guest addtion のバージョンを自動で合わせてくれる
 ```shell
 $ vagrant plugin install vagrant-vbguest
 ```
-※ VirtualBox の Guest addtion のバージョンを自動で合わせてくれる
+
+### vagrant-notify
+ホストに通知を送信できるようになる
+```shell
+# vagrant-notify をインストール
+$ vagrant plugin install vagrant-notify
+
+# terminal-notifier をインストール（ターミナルから通知を送信できる）
+$ brew install terminal-notifier
+
+# terminal-notifier, notify-send のラッパースクリプトを作成（実行権限を与える）
+$ vi /usr/local/bin/notify-send  # 下記「notify-send スクリプト」参照
+$ sudo chmod u+x /usr/local/bin/notify-send
+
+# ゲストを起動して SSH 接続
+$ vagrant up
+$ vagrant ssh
+
+# ゲストに notify-send がなければインストール
+$ which notify-send
+$ sudo yum install libnotify  # CentOS
+
+# 通知が送信されるか確認
+$ notify-send "タイトル" "ゲストマシンからの送信です"
+```
+#### notify-send スクリプト
+参考: <https://github.com/fgrehm/vagrant-notify/blob/master/examples/osx/terminal-notifier/notify-send.rb>
+```ruby
+#!/usr/bin/env ruby
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Example OS X terminal-notifier notify-send wrapper script.
+
+require 'optparse'
+
+
+options = {}
+OptionParser.new do |opts|
+  opts.on('-u', '--urgency LEVEL')           { |v| options[:u] = v } # Option gets removed
+  opts.on('-t', '--expire-time TIME')        { |v| options[:t] = v } # Option gets removed
+  opts.on('-a', '--app-name APP_NAME')       { |v| options[:a] = v } # TO DO: Set to -title
+  opts.on('-i', '--icon ICON[,ICON...]')     { |v| options[:i] = v } # Option gets removed
+  opts.on('-c', '--category TYPE[,TYPE...]') { |v| options[:c] = v } # Option gets removed
+  opts.on('-h', '--hint TYPE:NAME:VALUE')    { |v| options[:h] = v } # Option gets removed
+  opts.on('-v', '--version')                 { |v| options[:v] = v } # Option gets removed
+end.parse!
+
+
+if ARGV.length == 0
+  puts "No summary specified"
+  exit 1
+elsif ARGV.length == 1
+  message = "-message '\\#{ARGV[0]}'"
+elsif ARGV.length == 2
+  message = "-title '\\#{ARGV[0]}' -message '\\#{ARGV[1]}'"
+else
+  puts "Invalid number of options."
+  exit 1
+end
+
+system("terminal-notifier -sound default #{message}")
+```
+
+*■ TODO: "bootstrap.sh" で `sudo yum install libnotify` を実行するようにする*
 
 ## プロビジョン・ゲストの起動
 以下、ホスト側で実行
@@ -121,11 +187,3 @@ $ rm -rf bourbon # bourbon ディレクトリを削除
 * Susy
 * Bower
 * Gulp
-
-## その他
-gulp-notify で通知が送られた際にホストへ渡せない…。  
-[vagrant-notify - ゲストの通知をホストへ渡す Vagrant プラグイン](https://github.com/fgrehm/vagrant-notify)  
-※ インストールしてみたがエラーが出てゲストが立ち上がらない（恐らく Vagrant 1.7 未満なら動くと思われ…）  
-```shell
-$ vagrant plugin install vagrant-notify
-```
