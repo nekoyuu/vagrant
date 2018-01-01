@@ -4,14 +4,23 @@
 echo "Setting the TimeZone..."
 timedatectl set-timezone Asia/Tokyo
 
-# MySQL と競合するので MariaDB を削除
-echo "Deleting MariaDB package..."
-yum -y remove mariadb-libs
-
 # locate を利用可能にする
 echo "Installing mlocate..."
 yum -y install mlocate
 updatedb
+
+# MySQL と競合するので MariaDB を削除
+if locate mariadb-libs; then
+  echo "Deleting MariaDB package..."
+  yum -y remove mariadb-libs
+fi
+
+# notify-send を利用可能にする（デスクトップ通知）
+which notify-send > /dev/null 2>&1
+if ! [ $? = 0 ]; then
+  echo "Installing notify-send..."
+  yum -y install libnotify
+fi
 
 # リポジトリを追加
 if ! locate epel; then
