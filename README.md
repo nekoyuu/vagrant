@@ -70,8 +70,6 @@ end
 system("terminal-notifier -sound default #{message}")
 ```
 
-*■ TODO: "bootstrap.sh" で `sudo yum install libnotify` を実行するようにする*
-
 ## プロビジョン・ゲストの起動
 以下、ホスト側で実行
 ```shell
