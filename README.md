@@ -2,7 +2,7 @@
 
 ## Vagrant プラグインをインストール
 ### vagrant-vbguest
-VirtualBox の Guest addtion のバージョンを自動で合わせてくれる
+VirtualBox の Guest addtion のバージョンを自動で合わせてくれる  
 ```shell
 $ vagrant plugin install vagrant-vbguest
 ```
@@ -143,25 +143,11 @@ $ composer [require|remove] phpunit/phpunit:3.7.*       # require を対象に�
 $ composer [require|remove] phpunit/phpunit:3.7.* --dev # require-dev を対象に追加/削除
 ```
 
-### node.js (npm)
+### Node.js (npm)
 ```shell
 $ npm init # 初期設定（package.json を生成）
 $ npm [i|r] -S package # dependencies を対象に追加/削除
 $ npm [i|r] -D package # devDependencies を対象に追加/削除
-```
-
-### Bower
-```shell
-$ bower init # 初期設定（bower.json を生成）
-$ bower [i|r] -S package # dependencies を対象に追加/削除
-$ bower [i|r] -D package # devDependencies を対象に追加/削除
-```
-
-### Bourbon
-```shell
-# カレントディレクトリ配下に mixin が格納された bourbon/ が生成される
-$ bourbon install
-$ rm -rf bourbon # bourbon ディレクトリを削除
 ```
 
 ## スペック
@@ -169,19 +155,16 @@ $ rm -rf bourbon # bourbon ディレクトリを削除
 
 * Postfix + SASL
 * Apache
-* PHP: 5.6
-* MySQL: 5.6
+* PHP: 7.2.\*
+* MySQL: 5.7.\*
 * phpMyAdmin
-* git
-* gitflow
-* Ruby: settings.yaml に記載のバージョン
-* Nodejs
+    * URL: http://ip-address/phpmyadmin
+    * Root ID: root
+    * Root Password: FK7w!Zov3m
+* Git
+* git-flow
+* Ruby（settings.yaml に記載のバージョン）
+* Node.js
 * npm
 * Composer
-* Sass
-* Compass
-* Bourbon
-* Modular Scale
-* Susy
-* Bower
 * Gulp

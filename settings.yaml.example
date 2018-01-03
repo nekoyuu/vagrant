@@ -3,7 +3,7 @@ hostname: vagrant
 box: bento/centos-7.4
 ip: 10.0.0.10
 #network:
-#  ip: 192.168.0.100
+#  ip: 192.168.0.10
 #  bridge: "en5: Thunderbolt Ethernet"
 memory: 2048
 
@@ -11,4 +11,4 @@ db_name: develop
 db_username: develop
 db_password: develop
 
-ruby_version: 2.4.2
+ruby_version: 2.5.0

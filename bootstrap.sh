@@ -30,27 +30,27 @@ fi
 
 if ! locate remi; then
   echo "Adding the remi repository..."
-  rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+  rpm -Uvh http://rpms.remirepo.net/enterprise/remi-release-7.rpm
 fi
 
-if ! locate mysql56-community; then
+if ! locate mysql57-community; then
   echo "Adding the mysql community repository..."
-  rpm -Uvh http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
+  rpm -Uvh https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
 fi
 
 # Postfix + SASL のインストール
 # Note: MySQL と依存関係があるため、パッケージを指定しておかないと MySQL のインストールでこける
 #       Dependencies: mysql-community-common, mysql-community-libs
 echo "Installing Postfix + SASL..."
-yum -y --nogpgcheck --disablerepo=mysql57-community --enablerepo=epel,mysql56-community install postfix cyrus-sasl*
+yum -y --nogpgcheck --enablerepo=epel,mysql57-community install postfix cyrus-sasl*
 
-if [ -e /home/vagrant/main.cf ]; then
+if [ -e /home/vagrant/resources/postfix/main.cf ]; then
   echo "Copying Postfix config file..."
-  mv /home/vagrant/main.cf /etc/postfix/main.cf
+  mv /home/vagrant/resources/postfix/main.cf /etc/postfix
   chown root:root /etc/postfix/main.cf
 
   echo "Copying sasl relay password file..."
-  mv /home/vagrant/relay_password /etc/postfix/relay_password
+  mv /home/vagrant/resources/postfix/relay_password /etc/postfix
   chown root:root /etc/postfix/relay_password
   postmap hash:/etc/postfix/relay_password
 fi
@@ -79,30 +79,30 @@ if ! [ -e /var/www/public ]; then
   mkdir /var/www/public
 fi
 
-if [ -e /home/vagrant/httpd.conf ]; then
+if [ -e /home/vagrant/resources/apache/httpd.conf ]; then
   echo "Copying Apache config file..."
-  mv /home/vagrant/httpd.conf /etc/httpd/conf/httpd.conf
+  mv /home/vagrant/resources/apache/httpd.conf /etc/httpd/conf
 fi
 
 systemctl enable httpd
 systemctl restart httpd
 
-# PHP 5.6 のインストール
-echo "Installing PHP 5.6..."
-yum -y --nogpgcheck --enablerepo=epel,remi,remi-php56 install php php-devel php-opcache php-mbstring php-mcrypt php-gd php-pecl-imagick php-mysqlnd php-pecl-xdebug php-phpunit-PHPUnit php-pear
+# PHP 7.2.* のインストール
+echo "Installing PHP 7.2..."
+yum -y --nogpgcheck --enablerepo=epel,remi,remi-php72 install php php-devel php-opcache php-mbstring php-mcrypt php-gd php-pecl-imagick php-mysqlnd php-pecl-xdebug php-phpunit-PHPUnit php-pear
 
-if [ -e /home/vagrant/php.ini ]; then
+echo "Changing a group name of PHP lib directory..."
+chown -R vagrant:vagrant /var/lib/php/*
+
+if [ -e /home/vagrant/resources/php/php.ini ]; then
   echo "Copying PHP config file..."
-  mv /home/vagrant/php.ini /etc/php.ini
+  mv /home/vagrant/resources/php/php.ini /etc
 fi
 
-if [ -e /home/vagrant/xdebug.ini ]; then
+if [ -e /home/vagrant/resources/php/xdebug.ini ]; then
   echo "Copying Xdebug config file..."
-  mv /home/vagrant/xdebug.ini /etc/php.d/15-xdebug.ini
+  mv /home/vagrant/resources/php/xdebug.ini /etc/php.d/15-xdebug.ini
 fi
-
-echo "Changing a group name of PHP Session storage directory..."
-chown -R :vagrant /var/lib/php/session /var/lib/php/wsdlcache
 
 if ! [ -e /var/log/php_errors.log ]; then
   echo "Making the \"php_errors.log\" file..."
@@ -110,75 +110,63 @@ if ! [ -e /var/log/php_errors.log ]; then
 fi
 chown vagrant:vagrant /var/log/php_errors.log
 
-if [ -e /home/vagrant/logrotate_php ]; then
+if [ -e /home/vagrant/resources/php/logrotate_php ]; then
   echo "Copying rotate config file of php_errors.log..."
-  mv /home/vagrant/logrotate_php /etc/logrotate.d/php
+  mv /home/vagrant/resources/php/logrotate_php /etc/logrotate.d/php
 fi
 
 systemctl restart httpd
 
-# MySQL 5.6 のインストール
-echo "Installing MySQL 5.6..."
+# # MySQL 5.7 のインストール
+echo "Installing MySQL 5.7..."
 
-MYSQL_SECURE="vagrant"
+MYSQL_SECURE="FK7w!Zov3m"
 DB_NAME=$1
 DB_USERNAME=$2
 DB_PASSWORD=$3
 
-yum -y --nogpgcheck --disablerepo=mysql57-community --enablerepo=mysql56-community install mysql-community-server
+yum -y --nogpgcheck --enablerepo=mysql57-community install mysql-community-server
 
-if [ -e /home/vagrant/my.cnf ]; then
+if [ -e /home/vagrant/resources/mysql/my.cnf ]; then
   echo "Copying MySQL config file..."
-  mv /home/vagrant/my.cnf /etc/my.cnf
+  mv /home/vagrant/resources/mysql/my.cnf /etc
 fi
 
 systemctl enable mysqld
 systemctl start mysqld
-mysql -e "SHOW DATABASES;" > /dev/null 2>&1
 
-if [ $? = 0 ]; then
-  echo "Run the \"mysql_secure_installation\"..."
-  yum -y install expect
+mysql -uroot -p${MYSQL_SECURE} -e "SHOW DATABASES;" > /dev/null 2>&1
 
-  SECURE_MYSQL=$(expect -c "
-    set timeout 10
-    spawn mysql_secure_installation
-    expect \"Enter current password for root (enter for none):\"
-    send \"\r\"
-    expect \"Set root password?\"
-    send \"\r\"
-    expect \"New password:\"
-    send \"$MYSQL_SECURE\r\"
-    expect \"Re-enter new password:\"
-    send \"$MYSQL_SECURE\r\"
-    expect \"Remove anonymous users?\"
-    send \"\r\"
-    expect \"Disallow root login remotely?\"
-    send \"\r\"
-    expect \"Remove test database and access to it?\"
-    send \"\r\"
-    expect \"Reload privilege tables now?\"
-    send \"\r\"
-    expect eof
-  ")
-  echo "$SECURE_MYSQL"
+if ! [ $? = 0 ]; then
+  # 初期パスワードを変更
+  # https://akamist.com/blog/archives/1088
+  MYSQL_TEMP_PASSWORD=$(grep "A temporary password is generated" /var/log/mysqld.log | sed -s 's/.*root@localhost: //')
+  mysql -uroot -p${MYSQL_TEMP_PASSWORD} --connect-expired-password -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_SECURE}'; FLUSH PRIVILEGES;"
 
-  yum -y remove expect
+  # デフォルトでインストールされている Password Validation Plugin をアンインストール
+  # http://thr3a.hatenablog.com/entry/20160229/1456727388
+  mysql -uroot -p${MYSQL_SECURE} -e "UNINSTALL PLUGIN validate_password;"
+
+  echo "Creating the MySQL new database and user..."
+  mysql -uroot -p${MYSQL_SECURE} -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci";
+  mysql -uroot -p${MYSQL_SECURE} -e "GRANT ALL ON \`${DB_NAME}\`.* TO '${DB_USERNAME}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}'";
 fi
-
-echo "Creating the MySQL new database and user..."
-mysql -uroot -p$MYSQL_SECURE -e "CREATE DATABASE IF NOT EXISTS \`$DB_NAME\` DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci";
-mysql -uroot -p$MYSQL_SECURE -e "GRANT ALL ON \`$DB_NAME\`.* TO '$DB_USERNAME'@'localhost' IDENTIFIED BY '$DB_PASSWORD'";
 
 systemctl restart mysqld
 
 # phpMyAdmin のインストール
 echo "Installing phpMyAdmin..."
-yum -y --nogpgcheck --enablerepo=epel,remi,remi-php56 install phpMyAdmin
+yum -y --nogpgcheck --enablerepo=epel,remi,remi-php72 install phpMyAdmin
 
-if [ -e /home/vagrant/phpMyAdmin.conf ]; then
+if [ -e /home/vagrant/resources/phpmyadmin/phpMyAdmin.conf ]; then
+  echo "Copying phpMyAdmin httpd config file..."
+  mv /home/vagrant/resources/phpmyadmin/phpMyAdmin.conf /etc/httpd/conf.d
+fi
+
+if [ -e /home/vagrant/resources/phpmyadmin/config.inc.php ]; then
   echo "Copying phpMyAdmin config file..."
-  mv /home/vagrant/phpMyAdmin.conf /etc/httpd/conf.d/phpMyAdmin.conf
+  mv /home/vagrant/resources/phpmyadmin/config.inc.php /etc/phpMyAdmin
+  chown -R vagrant:vagrant /etc/phpMyAdmin
 fi
 
 systemctl restart httpd
@@ -207,8 +195,8 @@ if ! [ -e /usr/local/src/rbenv ]; then
 
   # Ruby のインストール
   echo "Installing Ryby..."
-  rbenv install $RUBY_VERSION
-  rbenv global $RUBY_VERSION
+  rbenv install ${RUBY_VERSION}
+  rbenv global ${RUBY_VERSION}
 
   # Gem のアップデート, bundler のインストール
   echo "Installing bundler..."
@@ -243,46 +231,6 @@ if ! [ -e /usr/local/src/nvm ]; then
   echo "Setting node and npm..."
   echo 'Defaults !secure_path' >> /etc/sudoers.d/00_base
   echo 'Defaults env_keep += "PATH RBENV_ROOT"' >> /etc/sudoers.d/00_base
-fi
-
-# Sass のインストール
-which sass > /dev/null 2>&1
-if ! [ $? = 0 ]; then
-  echo "Installing Sass..."
-  gem install sass
-fi
-
-# Compass のインストール
-which compass > /dev/null 2>&1
-if ! [ $? = 0 ]; then
-  echo "Installing Compass..."
-  gem install compass
-fi
-
-# Bourbon のインストール
-which bourbon > /dev/null 2>&1
-if ! [ $? = 0 ]; then
-  echo "Installing Bourbon..."
-  gem install bourbon
-fi
-
-# Modular Scale のインストール
-if ! locate modular-scale; then
-  echo "Installing Modular Scale..."
-  gem install modular-scale
-fi
-
-# Susy のインストール
-if ! locate susy; then
-  echo "Installing Susy..."
-  gem install susy
-fi
-
-# Bower のインストール
-which bower > /dev/null 2>&1
-if ! [ $? = 0 ]; then
-  echo "Installing Bower..."
-  npm install -g bower
 fi
 
 # Gulp のインストール（npm）
