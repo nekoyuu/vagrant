@@ -58,6 +58,11 @@ fi
 systemctl enable postfix
 systemctl restart postfix
 
+# ImageMagick のインストール
+# 7 系は rmagick がインストールできないので 6系を入れる
+echo "Installing ImageMagick 6.*..."
+yum -y --nogpgcheck --enablerepo=remi install ImageMagick6 ImageMagick6-devel
+
 # Apache のインストール
 echo "Installing Apache..."
 
@@ -104,6 +109,11 @@ if [ -e /home/vagrant/resources/php/xdebug.ini ]; then
   mv /home/vagrant/resources/php/xdebug.ini /etc/php.d/15-xdebug.ini
 fi
 
+if [ -e /home/vagrant/resources/php/imagick.ini ]; then
+  echo "Copying Imagick config file..."
+  mv /home/vagrant/resources/php/imagick.ini /etc/php.d/40-imagick.ini
+fi
+
 if ! [ -e /var/log/php_errors.log ]; then
   echo "Making the \"php_errors.log\" file..."
   touch /var/log/php_errors.log
@@ -117,7 +127,7 @@ fi
 
 systemctl restart httpd
 
-# # MySQL 5.7 のインストール
+# MySQL 5.7 のインストール
 echo "Installing MySQL 5.7..."
 
 MYSQL_SECURE="FK7w!Zov3m"

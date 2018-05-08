@@ -154,6 +154,7 @@ $ npm [i|r] -D package # devDependencies を対象に追加/削除
 バージョンの明記のないものは最新バージョン
 
 * Postfix + SASL
+* ImageMagick 6.*
 * Apache
 * PHP: 7.2.\*
 * MySQL: 5.7.\*
