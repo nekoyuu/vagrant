@@ -249,3 +249,6 @@ if ! [ $? = 0 ]; then
   echo "Installing gulp-cli..."
   npm install -g gulp-cli
 fi
+
+# Imagemin プラグイン mozjpeg のインストールに必要
+yum -y --nogpgcheck install nasm
