@@ -1,4 +1,5 @@
 # ローカル環境構築手順
+version: 2.1
 
 ## Vagrant プラグインをインストール
 ### vagrant-vbguest
@@ -113,14 +114,6 @@ $ composer install
 # npm で管理しているものがあれば実行
 # カレントディレクトリの package.json が実行される
 $ npm install
-
-# bower で管理しているものがあれば実行
-# カレントディレクトリの bower.json が実行される
-$ bower install
-
-# gulp を利用しているのであれば実行
-# カレントディレクトリの gulpfile.js が実行される
-$ gulp
 ```
 
 ### 補足
@@ -153,11 +146,13 @@ $ npm [i|r] -D package # devDependencies を対象に追加/削除
 ## スペック
 バージョンの明記のないものは最新バージョン
 
+* CentOS 7.*
 * Postfix + SASL
 * ImageMagick 6.*
 * Apache
-* PHP: 7.2.\*
-* MySQL: 5.7.\*
+* OpenSSL
+* PHP: 7.2.*
+* MySQL: 5.7.*
 * phpMyAdmin
     * URL: http://ip-address/phpmyadmin
     * Root ID: root
@@ -168,4 +163,3 @@ $ npm [i|r] -D package # devDependencies を対象に追加/削除
 * Node.js
 * npm
 * Composer
-* Gulp

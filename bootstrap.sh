@@ -63,12 +63,12 @@ systemctl restart postfix
 echo "Installing ImageMagick 6.*..."
 yum -y --nogpgcheck --enablerepo=remi install ImageMagick6 ImageMagick6-devel
 
-# Apache のインストール
+# Apache, OpenSSLのインストール
 echo "Installing Apache..."
 
-yum -y --nogpgcheck --enablerepo=epel install httpd
+yum -y --nogpgcheck --enablerepo=epel install httpd openssl-devel mod_ssl
 
-if ! [ -e /vagrant/www ]; then
+if ! [ -d /vagrant/www ]; then
   echo "Making the \"www\" directory..."
   mkdir /vagrant/www
 fi
@@ -79,7 +79,7 @@ if ! [ -L /var/www ]; then
   ln -fs /vagrant/www /var/www
 fi
 
-if ! [ -e /var/www/public ]; then
+if ! [ -d /var/www/public ]; then
   echo "Making the \"public\" directory..."
   mkdir /var/www/public
 fi
@@ -87,6 +87,47 @@ fi
 if [ -e /home/vagrant/resources/apache/httpd.conf ]; then
   echo "Copying Apache config file..."
   mv /home/vagrant/resources/apache/httpd.conf /etc/httpd/conf
+fi
+
+if ! [ -d /etc/pki/tls/certs ]; then
+  echo "Making the \"certs\" directory..."
+  mkdir /etc/pki/tls/certs
+fi
+
+if ! [ -f /etc/pki/tls/certs/server.key -a -f /etc/pki/tls/certs/server.csr ]; then
+  echo "Setting the SSL..."
+  cd /etc/pki/tls/certs
+  openssl genrsa -out server.key 2048
+
+  yum -y install expect
+
+  expect -c "
+    spawn openssl req -new -key server.key -out server.csr
+    expect \"Country Name\"
+    send \"JP\r\"
+    expect \"State or Province Name\"
+    send \"Tokushima\r\"
+    expect \"Locality Name\"
+    send \"Tokushima\r\"
+    expect \"Organization Name\"
+    send \"shape DESIGN\r\"
+    expect \"Organizational Unit Name\"
+    send \"\r\"
+    expect \"Common Name\"
+    send \"shape-design.jp\r\"
+    expect \"Email Address\"
+    send \"info@shape-design.jp\r\"
+    expect \"A challenge password\"
+    send \"\r\"
+    expect \"An optional company name\"
+    send \"\r\"
+    expect eof
+  "
+
+  openssl x509 -req -days 3650 -signkey server.key -in server.csr -out server.crt
+
+  echo "Copying SSL config file..."
+  mv /home/vagrant/resources/apache/ssl.conf /etc/httpd/conf.d/ssl.conf
 fi
 
 systemctl enable httpd
@@ -187,9 +228,9 @@ yum -y --nogpgcheck --enablerepo=epel install git gitflow
 
 # rbenv, ruby-build, Ruby, bundler のインストール
 RUBY_VERSION=$4
-if ! [ -e /usr/local/src/rbenv ]; then
+if ! [ -d /usr/local/src/rbenv ]; then
   # 依存パッケージのインストール
-  yum -y --nogpgcheck install gcc make openssl-devel readline-devel zlib-devel
+  yum -y --nogpgcheck install gcc make readline-devel zlib-devel
 
   # rbenv のインストール
   echo "Installing rbenv..."
@@ -221,10 +262,10 @@ if ! [ -e /usr/local/bin/composer ]; then
 fi
 
 # nvm, Node.js, npm のインストール
-if ! [ -e /usr/local/src/nvm ]; then
+if ! [ -d /usr/local/src/nvm ]; then
   # 依存パッケージのインストール
   # libpng-devel は npm の imagemin-pngquant をコンパイルするのに必要っぽい
-  yum -y --nogpgcheck install gcc-c++ openssl-devel libpng-devel
+  yum -y --nogpgcheck install gcc-c++ libpng-devel
 
   #nvm のインストール
   echo "Installing nvm..."
@@ -241,13 +282,6 @@ if ! [ -e /usr/local/src/nvm ]; then
   echo "Setting node and npm..."
   echo 'Defaults !secure_path' >> /etc/sudoers.d/00_base
   echo 'Defaults env_keep += "PATH RBENV_ROOT"' >> /etc/sudoers.d/00_base
-fi
-
-# Gulp のインストール（npm）
-which gulp > /dev/null 2>&1
-if ! [ $? = 0 ]; then
-  echo "Installing gulp-cli..."
-  npm install -g gulp-cli
 fi
 
 # Imagemin プラグイン mozjpeg のインストールに必要
