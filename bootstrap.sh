@@ -286,3 +286,11 @@ fi
 
 # Imagemin プラグイン mozjpeg のインストールに必要
 yum -y --nogpgcheck install nasm
+
+# cross-env のインストール
+# Laravel Mix の実行に必要
+which cross-env > /dev/null 2>&1
+if ! [ $? = 0 ]; then
+  echo "Installing cross-env..."
+  npm i -g cross-env
+fi
