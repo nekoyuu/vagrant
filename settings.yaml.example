@@ -1,5 +1,5 @@
 ---
-# ip を変更した場合は resources/ssl.conf の ServerName も要変更
+# ip を変更した場合は resources/apache/ssl.conf の ServerName も要変更
 hostname: vagrant
 box: bento/centos-7
 ip: 10.0.0.100

@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network 'forwarded_port', guest: 80, host: 8888, auto_correct: true
   config.vm.network 'forwarded_port', id: 'ssh', guest: 22, host: 2222, auto_correct: true
   config.vm.network 'private_network', ip: settings['ip'] ||= '10.0.0.100'
-  config.vm.synced_folder '.', '/vagrant'
+  config.vm.synced_folder '.', '/vagrant', type: 'nfs'
 
   if settings.has_key?('network')
     config.vm.network 'public_network',

@@ -38,6 +38,9 @@ if ! locate mysql57-community; then
   rpm -Uvh https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
 fi
 
+# zip, unzip のインストール
+yum -y --nogpgcheck install zip unzip
+
 # Postfix + SASL のインストール
 # Note: MySQL と依存関係があるため、パッケージを指定しておかないと MySQL のインストールでこける
 #       Dependencies: mysql-community-common, mysql-community-libs
