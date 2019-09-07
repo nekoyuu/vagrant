@@ -7,13 +7,25 @@ require 'yaml'
 
 settings = YAML.load_file('settings.yaml')
 
+if RUBY_PLATFORM.downcase =~ /mswin(?!ce)|mingw|cygwin|bccwin/
+  puts '--- ERROR ---'
+  puts 'This Vagrantfile is not compatible with Windows environment'
+  puts 'exit program...'
+  exit
+end
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vagrant.plugins = ['vagrant-vbguest', 'vagrant-bindfs']
+
   config.vm.box = settings['box'] ||= 'bento/centos-7'
   config.vm.hostname = settings['hostname'] ||= 'develop'
   config.vm.network 'forwarded_port', guest: 80, host: 8888, auto_correct: true
   config.vm.network 'forwarded_port', id: 'ssh', guest: 22, host: 2222, auto_correct: true
   config.vm.network 'private_network', ip: settings['ip'] ||= '10.0.0.100'
-  config.vm.synced_folder '.', '/vagrant', type: 'nfs'
+  config.vm.synced_folder '.', '/vagrant', disabled: true
+  config.vm.synced_folder '.', '/vagrant-nfs', type: 'nfs'
+
+  config.bindfs.bind_folder '/vagrant-nfs', '/vagrant'
 
   if settings.has_key?('network')
     config.vm.network 'public_network',

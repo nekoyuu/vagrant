@@ -2,11 +2,21 @@
 version: 2.1
 
 ## Vagrant プラグインをインストール
+
 ### vagrant-vbguest
 VirtualBox の Guest addtion のバージョンを自動で合わせてくれる  
 ```shell
 $ vagrant plugin install vagrant-vbguest
 ```
+※手動でインストールしなくても ```vagrant up``` 時に自動的にインストールされます。
+
+
+### vagrant-bindfs
+synced_folder で type: 'nfs' にした場合、uid、gid が変わってしまう問題を解消してくれる  
+```shell
+$ vagrant plugin install vagrant-bindfs
+```
+※手動でインストールしなくても ```vagrant up``` 時に自動的にインストールされます。
 
 ### vagrant-notify
 ホストに通知を送信できるようになる
