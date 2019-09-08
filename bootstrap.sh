@@ -39,6 +39,7 @@ if ! locate mysql57-community; then
 fi
 
 # zip, unzip のインストール
+echo "Installing zip, unzip..."
 yum -y --nogpgcheck install zip unzip
 
 # Postfix + SASL のインストール
@@ -68,7 +69,6 @@ yum -y --nogpgcheck --enablerepo=remi install ImageMagick6 ImageMagick6-devel
 
 # Apache, OpenSSLのインストール
 echo "Installing Apache..."
-
 yum -y --nogpgcheck --enablerepo=epel install httpd openssl-devel mod_ssl
 
 if ! [ -d /vagrant/www ]; then
@@ -132,6 +132,9 @@ if ! [ -f /etc/pki/tls/certs/server.key -a -f /etc/pki/tls/certs/server.csr ]; t
   echo "Copying SSL config file..."
   mv /home/vagrant/resources/apache/ssl.conf /etc/httpd/conf.d/ssl.conf
 fi
+
+# perl-CGI のインストール
+yum -y --nogpgcheck install perl-CGI
 
 systemctl enable httpd
 systemctl restart httpd
