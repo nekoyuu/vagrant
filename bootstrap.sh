@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# locale の設定
+localedef -f UTF-8 -i ja_JP ja_JP
+localectl set-locale LANG=ja_JP.utf8
+source /etc/locale.conf
+
 # timezone の設定
 echo "Setting the TimeZone..."
 timedatectl set-timezone Asia/Tokyo
@@ -25,7 +30,7 @@ fi
 # リポジトリを追加
 if ! locate epel; then
   echo "Adding the epel repository..."
-  rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  yum -y install epel-release
 fi
 
 if ! locate remi; then
@@ -35,7 +40,7 @@ fi
 
 if ! locate mysql57-community; then
   echo "Adding the mysql community repository..."
-  rpm -Uvh https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
+  rpm -Uvh https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
 fi
 
 # zip, unzip のインストール
@@ -46,7 +51,7 @@ yum -y --nogpgcheck install zip unzip
 # Note: MySQL と依存関係があるため、パッケージを指定しておかないと MySQL のインストールでこける
 #       Dependencies: mysql-community-common, mysql-community-libs
 echo "Installing Postfix + SASL..."
-yum -y --nogpgcheck --enablerepo=epel,mysql57-community install postfix cyrus-sasl*
+yum -y --nogpgcheck --disablerepo=mysql80-community --enablerepo=epel,mysql57-community install postfix cyrus-sasl*
 
 if [ -e /home/vagrant/resources/postfix/main.cf ]; then
   echo "Copying Postfix config file..."
@@ -69,7 +74,7 @@ yum -y --nogpgcheck --enablerepo=remi install ImageMagick6 ImageMagick6-devel
 
 # Apache, OpenSSLのインストール
 echo "Installing Apache..."
-yum -y --nogpgcheck --enablerepo=epel install httpd openssl-devel mod_ssl
+yum -y --nogpgcheck --enablerepo=epel install httpd httpd-devel openssl-devel mod_ssl
 
 if ! [ -d /vagrant/www ]; then
   echo "Making the \"www\" directory..."
@@ -182,7 +187,7 @@ DB_NAME=$1
 DB_USERNAME=$2
 DB_PASSWORD=$3
 
-yum -y --nogpgcheck --enablerepo=mysql57-community install mysql-community-server
+yum -y --nogpgcheck --disablerepo=mysql80-community --enablerepo=mysql57-community install mysql-community-server
 
 if [ -e /home/vagrant/resources/mysql/my.cnf ]; then
   echo "Copying MySQL config file..."
@@ -205,8 +210,8 @@ if ! [ $? = 0 ]; then
   mysql -uroot -p${MYSQL_SECURE} -e "UNINSTALL PLUGIN validate_password;"
 
   echo "Creating the MySQL new database and user..."
-  mysql -uroot -p${MYSQL_SECURE} -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci";
-  mysql -uroot -p${MYSQL_SECURE} -e "GRANT ALL ON \`${DB_NAME}\`.* TO '${DB_USERNAME}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}'";
+  mysql -uroot -p${MYSQL_SECURE} -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
+  mysql -uroot -p${MYSQL_SECURE} -e "GRANT ALL ON \`${DB_NAME}\`.* TO '${DB_USERNAME}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';"
 fi
 
 systemctl restart mysqld
