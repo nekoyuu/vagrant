@@ -161,7 +161,7 @@ $ npm [i|r] -D package # devDependencies を対象に追加/削除
 * ImageMagick 6.*
 * Apache
 * OpenSSL
-* PHP: 7.2.*
+* PHP: 7.4.*
 * MySQL: 5.7.*
 * phpMyAdmin
     * URL: http://ip-address/phpmyadmin

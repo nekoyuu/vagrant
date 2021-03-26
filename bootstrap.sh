@@ -47,6 +47,10 @@ fi
 echo "Installing zip, unzip..."
 yum -y --nogpgcheck install zip unzip
 
+# expect のインストール
+echo "Installing expect..."
+yum -y install expect
+
 # Postfix + SASL のインストール
 # Note: MySQL と依存関係があるため、パッケージを指定しておかないと MySQL のインストールでこける
 #       Dependencies: mysql-community-common, mysql-community-libs
@@ -107,8 +111,6 @@ if ! [ -f /etc/pki/tls/certs/server.key -a -f /etc/pki/tls/certs/server.csr ]; t
   cd /etc/pki/tls/certs
   openssl genrsa -out server.key 2048
 
-  yum -y install expect
-
   expect -c "
     spawn openssl req -new -key server.key -out server.csr
     expect \"Country Name\"
@@ -144,9 +146,9 @@ yum -y --nogpgcheck install perl-CGI
 systemctl enable httpd
 systemctl restart httpd
 
-# PHP 7.2.* のインストール
-echo "Installing PHP 7.2..."
-yum -y --nogpgcheck --enablerepo=epel,remi,remi-php72 install php php-devel php-opcache php-mbstring php-mcrypt php-gd php-pecl-imagick php-mysqlnd php-pecl-xdebug php-phpunit-PHPUnit php-pear
+# PHP 7.4.* のインストール
+echo "Installing PHP 7.4..."
+yum -y --nogpgcheck --enablerepo=epel,remi,remi-php74 install php php-devel php-opcache php-mbstring php-mcrypt php-gd php-pecl-imagick php-mysqlnd php-pecl-xdebug
 
 echo "Changing a group name of PHP lib directory..."
 chown -R vagrant:vagrant /var/lib/php/*
@@ -194,6 +196,11 @@ if [ -e /home/vagrant/resources/mysql/my.cnf ]; then
   mv /home/vagrant/resources/mysql/my.cnf /etc
 fi
 
+if [ -e /home/vagrant/resources/mysql/mysql-clients.cnf ]; then
+  echo "Copying MySQL config file..."
+  mv /home/vagrant/resources/mysql/mysql-clients.cnf /etc/my.cnf.d
+fi
+
 systemctl enable mysqld
 systemctl start mysqld
 
@@ -218,7 +225,7 @@ systemctl restart mysqld
 
 # phpMyAdmin のインストール
 echo "Installing phpMyAdmin..."
-yum -y --nogpgcheck --enablerepo=epel,remi,remi-php72 install phpMyAdmin
+yum -y --nogpgcheck --enablerepo=epel,remi,remi-php74 install phpMyAdmin
 
 if [ -e /home/vagrant/resources/phpmyadmin/phpMyAdmin.conf ]; then
   echo "Copying phpMyAdmin httpd config file..."
@@ -233,75 +240,15 @@ fi
 
 systemctl restart httpd
 
-# Git のインストール
-echo "Installing Git and Gitflow..."
-yum -y --nogpgcheck --enablerepo=epel install git gitflow
-
-# rbenv, ruby-build, Ruby, bundler のインストール
-RUBY_VERSION=$4
-if ! [ -d /usr/local/src/rbenv ]; then
-  # 依存パッケージのインストール
-  yum -y --nogpgcheck install gcc make readline-devel zlib-devel
-
-  # rbenv のインストール
-  echo "Installing rbenv..."
-  git clone git://github.com/sstephenson/rbenv.git /usr/local/src/rbenv
-  echo 'export RBENV_ROOT="/usr/local/src/rbenv"' >> /etc/profile.d/rbenv.sh
-  echo 'export PATH="${RBENV_ROOT}/bin:${PATH}"' >> /etc/profile.d/rbenv.sh
-  echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh
-  source /etc/profile.d/rbenv.sh
-
-  # ruby-build のインストール
-  echo "Installing ruby-build..."
-  git clone git://github.com/sstephenson/ruby-build.git /usr/local/src/rbenv/plugins/ruby-build
-
-  # Ruby のインストール
-  echo "Installing Ryby..."
-  rbenv install ${RUBY_VERSION}
-  rbenv global ${RUBY_VERSION}
-
-  # Gem のアップデート, bundler のインストール
-  echo "Installing bundler..."
-  gem update --system
-  gem install bundler
-fi
-
 # Composer のインストール
 if ! [ -e /usr/local/bin/composer ]; then
   echo "Installing Composer..."
   php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/local/bin --filename=composer
 fi
 
-# nvm, Node.js, npm のインストール
-if ! [ -d /usr/local/src/nvm ]; then
-  # 依存パッケージのインストール
-  # libpng-devel は npm の imagemin-pngquant をコンパイルするのに必要っぽい
-  yum -y --nogpgcheck install gcc-c++ libpng-devel
+# Git のインストール
+echo "Installing Git and Gitflow..."
+yum -y --nogpgcheck --enablerepo=epel install git gitflow
 
-  #nvm のインストール
-  echo "Installing nvm..."
-  git clone git://github.com/creationix/nvm.git /usr/local/src/nvm
-  . /usr/local/src/nvm/nvm.sh
-  echo 'source /usr/local/src/nvm/nvm.sh' >> /etc/profile.d/nvm.sh
-
-  # node のインストール
-  echo "Installing node..."
-  nvm install stable
-  nvm use stable
-
-  # sudo node, sudo npm が使えるようにする
-  echo "Setting node and npm..."
-  echo 'Defaults !secure_path' >> /etc/sudoers.d/00_base
-  echo 'Defaults env_keep += "PATH RBENV_ROOT"' >> /etc/sudoers.d/00_base
-fi
-
-# Imagemin プラグイン mozjpeg のインストールに必要
-yum -y --nogpgcheck install nasm
-
-# cross-env のインストール
-# Laravel Mix の実行に必要
-which cross-env > /dev/null 2>&1
-if ! [ $? = 0 ]; then
-  echo "Installing cross-env..."
-  npm i -g cross-env
-fi
+# Ruby のインストールに必要
+yum -y --nogpgcheck install openssl-devel readline-devel zlib-devel

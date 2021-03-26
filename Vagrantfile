@@ -48,16 +48,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       settings['db_name'] ||= 'develop',      # $1
       settings['db_username'] ||= 'develop',  # $2
       settings['db_password'] ||= 'develop',  # $3
-      settings['ruby_version'] ||= '2.5.3'    # $4
     ]
   end
 
-  config.vm.provision 'shell', run: 'always', :inline => <<-SHELL
-    if [ -d /var/www/html ]; then
-      rm -rf /var/www/html
-    fi
+  # vagrant ユーザーとして実行
+  config.vm.provision 'shell', privileged: false, path: "./anyenv/anyenv.sh"
+  config.vm.provision 'shell', privileged: false, path: "./anyenv/envs_install.sh"
+  config.vm.provision 'shell', privileged: false do |s|
+    s.path = './anyenv/envs.sh'
+    s.args = [
+      settings['ruby_version'] ||= '3.0.0',    # $1
+      settings['node_version'] ||= '15.12.0',  # $2
+    ]
+  end
 
-    systemctl restart httpd
-    systemctl restart mysqld
-  SHELL
+  # config.vm.provision 'shell', run: 'always', :inline => <<-SHELL
+  #   if [ -d /var/www/html ]; then
+  #     rm -rf /var/www/html
+  #   fi
+
+  #   systemctl restart httpd
+  #   systemctl restart mysqld
+  # SHELL
 end
