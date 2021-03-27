@@ -83,7 +83,7 @@ system("terminal-notifier -sound default #{message}")
 ## プロビジョン・ゲストの起動
 以下、ホスト側で実行
 ```shell
-$ git clone kakeo@server.shape-design.info:/var/git/vagrant.git {project_name}
+$ git clone git@github.com:nekoyuu/vagrant.git {project_name}
 $ cd {project_name}
 $ cp settings.yaml.example settings.yaml
 
@@ -120,7 +120,7 @@ $ vagrant ssh
 ```shell
 $ cd /vagrant/www
 $ git init
-$ git remote add origin kakeo@server.shape-design.info:/var/git/{type}/{project_name}.git
+$ git remote add origin git@github.com:nekoyuu/vagrant.git
 
 # リモートのブランチを取得する
 $ git fetch
