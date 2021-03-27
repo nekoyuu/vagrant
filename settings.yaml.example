@@ -8,8 +8,9 @@ ip: 10.0.0.100
 #   bridge: "en5: Thunderbolt Ethernet"
 memory: 2048
 
-db_name: develop
-db_username: develop
-db_password: develop
+# db_name: develop
+# db_username: develop
+# db_password: develop
 
-ruby_version: 2.6.6
+# ruby_version: 3.0.0
+# node_version: 15.12.0
