@@ -62,12 +62,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ]
   end
 
-  # config.vm.provision 'shell', run: 'always', :inline => <<-SHELL
-  #   if [ -d /var/www/html ]; then
-  #     rm -rf /var/www/html
-  #   fi
+  config.vm.provision 'shell', run: 'always', :inline => <<-SHELL
+    if [ -d /var/www/html ]; then
+      rm -rf /var/www/html
+    fi
 
-  #   systemctl restart httpd
-  #   systemctl restart mysqld
-  # SHELL
+    systemctl restart httpd
+    systemctl restart mysqld
+  SHELL
 end

@@ -86,10 +86,27 @@ system("terminal-notifier -sound default #{message}")
 $ git clone kakeo@server.shape-design.info:/var/git/vagrant.git {project_name}
 $ cd {project_name}
 $ cp settings.yaml.example settings.yaml
-$ vi settings.yaml
-# hostname, ip などプロビジョニングの設定を編集
-# ip は同時に立ち上げている環境と被っていると正常に動作しないので注意
 
+# プロビジョンの設定
+# hostname, ip などプロビジョニングの設定を編集
+# IP は同時に立ち上げている環境と被っていると正常に動作しないので注意
+$ vi settings.yaml
+
+# SSL の ServerName を設定した IP に合わせる
+$ vi resources/apache/ssl.conf
+
+# 最下部の設定を利用する SMTP サーバーに合わせて変更
+$ vi resources/postfix/main.cf
+
+# SMTP の設定に合わせて変更
+$ vi resources/postfix/relay_password
+
+# 116 - 137 行目辺りのオレオレ認証局設定も必要であれば変更
+$ vi bootstrap.sh
+
+# その他、PHP（php.ini） や MySQL（my.cnf） などの細かな設定は resources 内のファイルで行う
+
+# ゲストの起動
 $ vagrant up
 ```
 

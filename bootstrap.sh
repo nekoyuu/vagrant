@@ -61,7 +61,9 @@ if [ -e /home/vagrant/resources/postfix/main.cf ]; then
   echo "Copying Postfix config file..."
   mv /home/vagrant/resources/postfix/main.cf /etc/postfix
   chown root:root /etc/postfix/main.cf
+fi
 
+if [ -e /home/vagrant/resources/postfix/relay_password ]; then
   echo "Copying sasl relay password file..."
   mv /home/vagrant/resources/postfix/relay_password /etc/postfix
   chown root:root /etc/postfix/relay_password
