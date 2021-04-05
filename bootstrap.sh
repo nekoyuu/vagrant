@@ -252,5 +252,8 @@ fi
 echo "Installing Git and Gitflow..."
 yum -y --nogpgcheck --enablerepo=epel install git gitflow
 
-# Ruby のインストールに必要
+# rbenv で Ruby のインストールに必要
 yum -y --nogpgcheck install openssl-devel readline-devel zlib-devel
+
+# Laravel mix で使用する Imagemin プラグイン mozjpeg のインストールに必要
+yum -y --nogpgcheck install nasm
